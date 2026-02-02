@@ -20,7 +20,8 @@ function App() {
     const newHabit = {
       id: Date.now(),
       nome: input,
-      dias: Array(7).fill(false) /* cria um array com 7 posições, todas tem o valor de falso */
+      dias: Array(7).fill(false), /* cria um array com 7 posições, todas tem o valor de falso */
+      pontos: 0
     }
     /* habito anterior + habito atual */
     setHabitos([...habitos, newHabit]);
@@ -42,27 +43,26 @@ function App() {
         /*se for o hábito certo, cria um novo array de dias com a mudança de false -> true*/
         const novosDias = habito.dias.map((dia, index) => {
           if (index === dayIndex) {
-            if (!dia) {
-              setPoints(prevPoints => prevPoints + 10)
-            } else {
-              setPoints(prevPoints => prevPoints - 10)
-            }
-
             return !dia;
           }
           return dia;
         })
 
+        const diaFoiMarcado = !habito.dias[dayIndex];
+
         /*retorna o hábito atualizado*/
         return {
           ...habito,
-          dias: novosDias
+          dias: novosDias,
+          pontos: diaFoiMarcado
+            ? habito.pontos + 10
+            : habito.pontos - 10
         }
       })
     )
 
-    
-    
+
+
   }
   /* retorna todos os habitos diferente do clicado */
   const deleteHabit = (id) => {
@@ -92,7 +92,7 @@ function App() {
                   <button key={index} className={habito.dias[index] ? 'day active' : 'day'} onClick={() => toggleHabitDay(habito.id, index)}>{dia}</button>
                 ))}
                 <button className='delete-item' onClick={() => deleteHabit(habito.id)} ><FaRegTrashAlt /></button>
-                <button className='points'>{points}</button>
+                <button className='points'>{habito.pontos}</button>
               </div>
             </li>
           ))
